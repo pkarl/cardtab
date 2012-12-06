@@ -8,7 +8,11 @@
 		var scaleRanges = [1.0, 1.3];
 		var marginRange = [0, 40];
 
-		var numElements = 9; // make this odd, bitches
+		var numElements = 5; // make this odd, bitches
+
+		var defaultMargin = 0;
+
+		var focused, focusedSet; 
 
 		var hashes = {
 			angles: [],
@@ -16,34 +20,34 @@
 			margins: []
 		}
 
-		function getMean(arr) {
+		// function getMean(arr) {
 
-			var sum = 0, i = -1;
+		// 	var sum = 0, i = -1;
 
-			while(++i < arr.length) {
-				sum += arr[i];
-			}
+		// 	while(++i < arr.length) {
+		// 		sum += arr[i];
+		// 	}
 
-			return sum / arr.length
-		}
+		// 	return sum / arr.length
+		// }
 
-		function getStdev(arr) {
+		// function getStdev(arr) {
 
-			var mean = getMean(arr), sqDeviations = [], dSum = 0, i = -1;
+		// 	var mean = getMean(arr), sqDeviations = [], dSum = 0, i = -1;
 
-			while(++i < arr.length) {
-				sqDeviations.push( Math.pow( (arr[i] - mean), 2 ) );
-			}
+		// 	while(++i < arr.length) {
+		// 		sqDeviations.push( Math.pow( (arr[i] - mean), 2 ) );
+		// 	}
 
-			i = -1;
-			while(++i < sqDeviations.length) {
-				dSum += sqDeviations[i];
-			}
+		// 	i = -1;
+		// 	while(++i < sqDeviations.length) {
+		// 		dSum += sqDeviations[i];
+		// 	}
 
-			return Math.sqrt( dSum / (sqDeviations.length - 1) );
-		}
+		// 	return Math.sqrt( dSum / (sqDeviations.length - 1) );
+		// }
 
-		function calcRotationHashes() {
+		function setDefaults() {
 
 			var brute = parseInt(numElements/2);
 			
@@ -53,8 +57,6 @@
 
 			hashes.angles =  jstat.seq(0, angleStrength, brute + 1 );
 			hashes.angles[ hashes.angles.length -1 ] = 0;
-
-			console.log(hashes.angles);
 
 			// === rando notes === \\
 
@@ -78,63 +80,72 @@
 				hashes.angles.push( - hashes.angles[ brute - i - 1 ] );
 			}
 
-			console.log(hashes.angles);
+			defaultMargin = $('.focused').css('marginTop');
 		}
 
 		function drawRotation() {
 
-			focused = $('.focused');
-
-			focusedSet = focused
-				.add(focused.nextAll().slice(0, ( (numElements-1) / 2) ))
-				.add(focused.prevAll().slice(0, ( (numElements-1) / 2) ));
+			gatherCards();
 
 			$(focusedSet).css('border', '1px solid red');
 
-			// based on ranges + rules draw rotations
-
-			// angles _/_\_
-
-			// scales _/-\_
-
-			// _.map($(focusedSet), $.transition())
-
 			$(focusedSet).each(function(i) {
-
-				console.log(i, hashes.angles[i]);
 
 				$(this).transition(
 					{
 					    perspective: '100px',
 					    rotateX: hashes.angles[i] + 'deg',
 					    scale: hashes.scales[i],
-					    marginTop: '+=' + hashes.margins[i] + 'px',
-					    marginBottom: '+=' + hashes.margins[i] + 'px'
+					    marginTop: hashes.margins[i] + 'px',
+					    marginBottom: hashes.margins[i] + 'px'
 					}
-				);
+				).removeClass('resetMe');
 
 				// $(this).css( { 'margin-top': hashes.margins[i], 'margin-bottom':  } );
 			});
 
-			// margins _/-\_
+			$('.resetMe').transition(
+				{
+					marginTop: defaultMargin,
+					marginBottom: defaultMargin
+				}
+			).removeClass('resetMe');
+		}
 
-			// $(focusedSet).each(function(i) {
-			// 	$(this).css( { 'margin-top': hashes.margins[i], 'margin-bottom': hashes.margins[i] } );
-			// });
+		function gatherCards() {
+			focused = $('.focused');
+
+			focusedSet = focused
+				.add(focused.nextAll().slice(0, ( (numElements-1) / 2) ))
+				.add(focused.prevAll().slice(0, ( (numElements-1) / 2) ));
 		}
 
 		function setNext() {
+			$('.focused').removeClass('focused').next().addClass('focused');
 
-			focused = $('.focused');
-			focused.removeClass('focused').next().addClass('focused');
+			focusedSet.addClass('resetMe');
 
 			drawRotation();
+
+			// move card holder
+			$('.card-container').transition( {
+				marginTop: '-=90px'
+			});
 
 		}
 
 		function setPrev() {
 
-			// focused = $('.focused');
+			$('.focused').removeClass('focused').prev().addClass('focused');
+
+			focusedSet.addClass('resetMe');
+
+			drawRotation();
+
+			// move card holder
+			$('.card-container').transition( {
+				marginTop: '+=90px'
+			});
 
 		}
 
@@ -149,21 +160,20 @@
 
 				$('.card:eq(' + parseInt(numElements/2) + ')').addClass('focused');
 
-				calcRotationHashes();
-				drawRotation();
+				setDefaults();
 
-				// create keyboard listener
-				// setNext
+				drawRotation();
 
 				$('body').live('keydown', function(e) { 
 					var keyCode = e.keyCode || e.which; 
 
-					if (keyCode == 9) { 
-					e.preventDefault(); 
-					
-					setNext();
-
-					} 
+					if (keyCode == 9 && e.shiftKey) { 
+						e.preventDefault(); 
+						setPrev();
+					} else if (keyCode == 9) { 
+						e.preventDefault(); 
+						setNext();
+					}
 				});
 
 
