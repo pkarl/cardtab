@@ -87,8 +87,6 @@
 
 			gatherCards();
 
-			$(focusedSet).css('border', '1px solid red');
-
 			$(focusedSet).each(function(i) {
 
 				$(this).transition(
@@ -154,7 +152,7 @@
 			init: function() {
 				// draw cards
 				var i = -1;
-				while(++i < 15) {
+				while(++i < 20) {
 					$('#card-list').append("<div class='card'></div>");    
 				}
 
@@ -173,7 +171,7 @@
 					} else if (keyCode == 9) { 
 						e.preventDefault(); 
 						setNext();
-					}
+					} 
 				});
 
 
