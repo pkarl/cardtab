@@ -3,10 +3,10 @@
 
 	this.cardManager = function () {
 
-		var angleStrength = 5; // in degrees, this should be 0 - 45deg
+		var angleStrength = 10; // in degrees, this should be 0 - 45deg
 
 		var scaleRanges = [1.0, 1.3];
-		var marginRange = [0, 40];
+		var marginRange = [0, 60];
 
 		var numElements = 5; // make this odd, bitches
 
@@ -157,6 +157,8 @@
 				}
 
 				$('.card:eq(' + parseInt(numElements/2) + ')').addClass('focused');
+
+				$.fx.speeds._default = 100;
 
 				setDefaults();
 
