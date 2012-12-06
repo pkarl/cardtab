@@ -8,7 +8,7 @@
 		var scaleRanges = [1.0, 1.3];
 		var marginRange = [0, 50];
 
-		var numElements = 7; // make this odd, bitches
+		var numElements = 9; // make this odd, bitches
 
 		var defaultMargin = 0;
 

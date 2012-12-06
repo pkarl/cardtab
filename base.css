@@ -20,4 +20,5 @@ body {
 
 .focused {
 	border: 1px solid red;	
+	padding: 0 1em;
 }
