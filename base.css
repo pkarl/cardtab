@@ -15,10 +15,14 @@ body {
 }
 
 .card:nth-child(even) {
-	height: 10em;
+	height: 8em;
+}
+
+.card:nth-child(2n+1) {
+	height: 4em;
 }
 
 .focused {
-	border: 1px solid red;	
+	border: 1px solid #b9b9b9;	
 	padding: 0 1em;
 }
