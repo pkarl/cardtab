@@ -3,12 +3,12 @@
 
 	this.cardManager = function () {
 
-		var angleStrength = 10; // in degrees, this should be 0 - 45deg
+		var angleStrength = 6; // in degrees, this should be 0 - 45deg
 
 		var scaleRanges = [1.0, 1.3];
-		var marginRange = [0, 60];
+		var marginRange = [0, 50];
 
-		var numElements = 5; // make this odd, bitches
+		var numElements = 7; // make this odd, bitches
 
 		var defaultMargin = 0;
 
@@ -81,6 +81,10 @@
 			}
 
 			defaultMargin = $('.focused').css('marginTop');
+
+			$('.card-container').transition( {
+				marginTop: '-' + ( $('.focused').offset().top - 50) + 'px'
+			});
 		}
 
 		function drawRotation() {
@@ -125,7 +129,6 @@
 
 			drawRotation();
 
-			// move card holder
 			$('.card-container').transition( {
 				marginTop: '-=' + $('.focused').height() + 'px'
 			});
@@ -140,7 +143,6 @@
 
 			drawRotation();
 
-			// move card holder
 			$('.card-container').transition( {
 				marginTop: '+=' + $('.focused').height() + 'px'
 			});
