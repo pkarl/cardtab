@@ -127,7 +127,7 @@
 
 			// move card holder
 			$('.card-container').transition( {
-				marginTop: '-=90px'
+				marginTop: '-=' + $('.focused').height() + 'px'
 			});
 
 		}
@@ -142,7 +142,7 @@
 
 			// move card holder
 			$('.card-container').transition( {
-				marginTop: '+=90px'
+				marginTop: '+=' + $('.focused').height() + 'px'
 			});
 
 		}
